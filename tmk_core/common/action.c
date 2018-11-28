@@ -209,7 +209,7 @@ void process_action(keyrecord_t *record, action_t action) {
     uint8_t tap_count = record->tap.count;
 #endif
 
-    if (event.pressed) {
+    if (event.pressed && IS_MOD(action.key.code)) {
         // clear the potential weak mods left by previously pressed keys
         clear_weak_mods();
     }
