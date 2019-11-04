@@ -512,6 +512,8 @@ enum quantum_keycodes {
     DYN_MACRO_PLAY1,
     DYN_MACRO_PLAY2,
 
+    WEBUSB_PAIR,
+
     // always leave at the end
     SAFE_RANGE
 };

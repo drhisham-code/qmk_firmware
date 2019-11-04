@@ -81,6 +81,10 @@ void console_task(void);
 void midi_ep_task(void);
 #endif
 
+#ifdef WEBUSB_ENABLE
+void webusb_task(void);
+#endif
+
 /* TESTING
  * Amber LED blinker thread, times are in milliseconds.
  */
@@ -221,6 +225,9 @@ int main(void) {
 #endif
 #ifdef RAW_ENABLE
         raw_hid_task();
+#endif
+#ifdef WEBUSB_ENABLE
+        webusb_task();
 #endif
     }
 }
