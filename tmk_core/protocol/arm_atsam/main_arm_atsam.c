@@ -291,6 +291,20 @@ int main(void) {
 
         keyboard_task();
 
+#ifdef CHIBIOS_THREADED_LIGHTS
+#    if defined(BACKLIGHT_ENABLE)
+#        if defined(LED_MATRIX_ENABLE)
+        led_matrix_task();
+#        elif defined(BACKLIGHT_PIN) || defined(BACKLIGHT_PINS)
+        backlight_task();
+#        endif
+#    endif
+#endif
+
+#ifdef RGB_MATRIX_ENABLE
+    rgb_matrix_task();
+#endif
+
 #ifdef CONSOLE_ENABLE
         if (timer_read64() > next_print) {
             next_print = timer_read64() + 250;

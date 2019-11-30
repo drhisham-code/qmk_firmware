@@ -659,12 +659,13 @@ void matrix_scan_quantum() {
     matrix_scan_combo();
 #endif
 
-#ifdef LED_MATRIX_ENABLE
+#ifndef CHIBIOS_THREADED_LIGHTS
+#    if defined(LED_MATRIX_ENABLE)
     led_matrix_task();
-#endif
-
-#ifdef RGB_MATRIX_ENABLE
+#    endif
+#    ifdef RGB_MATRIX_ENABLE
     rgb_matrix_task();
+#    endif
 #endif
 
 #ifdef ENCODER_ENABLE

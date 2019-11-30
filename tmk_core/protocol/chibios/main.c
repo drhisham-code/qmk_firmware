@@ -37,6 +37,17 @@
 #if (defined(RGB_MIDI) || defined(RGBLIGHT_ANIMATIONS)) && defined(RGBLIGHT_ENABLE)
 #    include "rgblight.h"
 #endif
+#if defined(RGB_MATRIX_ENABLE)
+#    include "rgb_matrix.h"
+#endif
+#if defined(BACKLIGHT_ENABLE)
+#    if defined(LED_MATRIX_ENABLE)
+#        include "ledmatrix.h"
+#    elif defined(BACKLIGHT_PIN) || defined(BACKLIGHT_PINS)
+#        include "backlight.h"
+#    endif
+#endif
+
 #ifdef SLEEP_LED_ENABLE
 #    include "sleep_led.h"
 #endif
@@ -105,6 +116,29 @@ void midi_ep_task(void);
 //   }
 // }
 
+#ifdef CHIBIOS_THREADED_LIGHTS
+static THD_WORKING_AREA(waLEDThread, 128);
+static THD_FUNCTION(LEDThread, arg) {
+    (void)arg;
+    chRegSetThreadName("LEDThread");
+    while (true) {
+#    if defined(BACKLIGHT_ENABLE)
+#        if defined(LED_MATRIX_ENABLE)
+        led_matrix_task();
+#        elif defined(BACKLIGHT_PIN) || defined(BACKLIGHT_PINS)
+        backlight_task();
+#        endif
+#    endif
+
+#    ifdef RGB_MATRIX_ENABLE
+        rgb_matrix_task();
+#    endif
+        // need some sort of wait here, or get weird render issues
+        wait_ms(1);
+    }
+}
+#endif
+
 /* Main thread
  */
 int main(void) {
@@ -118,6 +152,9 @@ int main(void) {
 
     // TESTING
     // chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
+#ifdef CHIBIOS_THREADED_LIGHTS
+    chThdCreateStatic(waLEDThread, sizeof(waLEDThread), NORMALPRIO, LEDThread, NULL);
+#endif
 
     keyboard_setup();
 

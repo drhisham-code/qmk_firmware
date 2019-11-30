@@ -995,6 +995,20 @@ int main(void) {
 
         keyboard_task();
 
+#ifdef CHIBIOS_THREADED_LIGHTS
+#    if defined(BACKLIGHT_ENABLE)
+#        if defined(LED_MATRIX_ENABLE)
+        led_matrix_task();
+#        elif defined(BACKLIGHT_PIN) || defined(BACKLIGHT_PINS)
+        backlight_task();
+#        endif
+#    endif
+
+#    ifdef RGB_MATRIX_ENABLE
+        rgb_matrix_task();
+#    endif
+#endif
+
 #ifdef MIDI_ENABLE
         MIDI_Device_USBTask(&USB_MIDI_Interface);
 #endif
