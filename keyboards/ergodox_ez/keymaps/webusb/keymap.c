@@ -20,6 +20,12 @@ enum custom_keycodes {
   HSV_27_255_255,
 };
 
+enum layers {
+    BASE,
+    SYMB,
+    MDIA,
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
  *
@@ -89,7 +95,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TRNS, KC_EXLM, KC_AT,   KC_LCBR, KC_RCBR, KC_PIPE, KC_TRNS,
   KC_TRNS, KC_HASH, KC_DLR,  KC_LPRN, KC_RPRN, KC_GRV,
   KC_TRNS, KC_PERC, KC_CIRC, KC_LBRC, KC_RBRC, KC_TILD, KC_TRNS,
-  EPRM,    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                                                RGB_MOD, KC_TRNS,
                                                         KC_TRNS,
                                       RGB_VAD, RGB_VAI, KC_TRNS,
@@ -187,9 +193,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
-uint32_t layer_state_set_user(uint32_t state) {
+layer_state_t layer_state_set_user(layer_state_t state) {
 
-    uint8_t layer = biton32(state);
+    uint8_t layer = get_highest_layer(state);
 
     ergodox_board_led_off();
     ergodox_right_led_1_off();

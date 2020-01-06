@@ -214,6 +214,9 @@ bool process_record_quantum(keyrecord_t *record) {
 #if defined(RGB_MATRIX_ENABLE)
             process_rgb_matrix(keycode, record) &&
 #endif
+#ifdef ORYX_ENABLE
+            process_record_oryx(keycode, record) &&
+#endif
 #if defined(VIA_ENABLE)
             process_record_via(keycode, record) &&
 #endif
@@ -317,9 +320,7 @@ bool process_record_quantum(keyrecord_t *record) {
 #endif
 #ifdef WEBUSB_ENABLE
             case WEBUSB_PAIR:
-                if (record->event.pressed) {
-                    webusb_state.pairing = true;
-                }
+                webusb_state.pairing ^= true;
                 return false;
 #endif
         }
@@ -621,6 +622,9 @@ void matrix_init_quantum() {
     if (!eeconfig_is_enabled()) {
         eeconfig_init();
     }
+#if defined(ORYX_ENABLE) && defined(DYNAMIC_KEYMAP_ENABLE)
+    matrix_init_oryx();
+#endif
 #ifdef BACKLIGHT_ENABLE
 #    ifdef LED_MATRIX_ENABLE
     led_matrix_init();
@@ -808,3 +812,16 @@ __attribute__((weak)) void startup_user() {}
 __attribute__((weak)) void shutdown_user() {}
 
 //------------------------------------------------------------------------------
+
+#ifdef WEBUSB_ENABLE
+__attribute__((weak)) bool webusb_receive_user(uint8_t *data, uint8_t length) { return false; }
+__attribute__((weak)) bool webusb_receive_kb(uint8_t *data, uint8_t length) { return webusb_receive_user(data, length); }
+
+bool webusb_receive_quantum(uint8_t *data, uint8_t length) {
+#ifdef ORYX_ENABLE
+    return webusb_receive_oryx(data, length);
+#else
+    return webusb_receive_kb(data, length);
+#endif
+}
+#endif

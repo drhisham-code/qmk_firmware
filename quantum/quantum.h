@@ -166,6 +166,15 @@ extern layer_state_t layer_state;
 #    include "dip_switch.h"
 #endif
 
+
+#ifdef WEBUSB_ENABLE
+#    include "webusb.h"
+#endif
+
+#ifdef ORYX_ENABLE
+#    include "oryx.h"
+#endif
+
 #ifdef DYNAMIC_MACRO_ENABLE
 #    include "process_dynamic_macro.h"
 #endif
@@ -177,11 +186,6 @@ extern layer_state_t layer_state;
 #ifdef VIA_ENABLE
 #    include "via.h"
 #endif
-
-#ifdef WEBUSB_ENABLE
-#    include "webusb.h"
-#endif
-
 
 // Function substitutions to ease GPIO manipulation
 #if defined(__AVR__)
@@ -289,3 +293,6 @@ bool led_update_user(led_t led_state);
 bool led_update_kb(led_t led_state);
 
 void api_send_unicode(uint32_t unicode);
+
+bool webusb_receive_kb(uint8_t *data, uint8_t length);
+bool webusb_receive_user(uint8_t *data, uint8_t length);
