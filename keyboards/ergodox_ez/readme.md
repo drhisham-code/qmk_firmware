@@ -13,7 +13,12 @@ This supports both the original ErgoDox style PCBs, as well as the EZ variant.
 
 * Keyboard Maintainer: [Drashna](https://github.com/drashna)
 * Hardware Supported: The PCBs, controllers supported
-* Hardware Availability: [ErgoDox EZ](https://ergodox-ez.com/), [Profet Keyboards](http://shop.profetkeyboards.com/product/ergodox-pcbs), [FalbaTech](https://falba.tech/customize-your-keyboard/customize-your-ergodox/)
+* Hardware Availability: 
+  * [ErgoDox EZ](https://ergodox-ez.com/) 
+  * [Profet Keyboards](http://shop.profetkeyboards.com/product/ergodox-pcbs)
+  * [FalbaTech](https://falba.tech/customize-your-keyboard/customize-your-ergodox/)
+  * [MechanicalKeyboards](https://mechanicalkeyboards.com/shop/index.php?l=product_detail&p=537)
+
 
 Make example for this keyboard (after setting up your build environment):
 
