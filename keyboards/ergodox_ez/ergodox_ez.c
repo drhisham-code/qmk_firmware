@@ -60,50 +60,49 @@ void matrix_init_kb(void) {
     matrix_init_user();
 }
 
-void ergodox_blink_all_leds(void)
-{
+void ergodox_blink_all_leds(void) {
     ergodox_led_all_off();
     ergodox_led_all_set(LED_BRIGHTNESS_DEFAULT);
     ergodox_right_led_1_on();
-    _delay_ms(50);
+    wait_ms(50);
     ergodox_right_led_2_on();
-    _delay_ms(50);
+    wait_ms(50);
     ergodox_right_led_3_on();
-    _delay_ms(50);
+    wait_ms(50);
 #ifdef LEFT_LEDS
     ergodox_left_led_1_on();
-    _delay_ms(50);
+    wait_ms(50);
     if (!mcp23018_status) {
       mcp23018_status = ergodox_left_leds_update();
     }
     ergodox_left_led_2_on();
-    _delay_ms(50);
+    wait_ms(50);
     if (!mcp23018_status) {
       mcp23018_status = ergodox_left_leds_update();
     }
     ergodox_left_led_3_on();
-    _delay_ms(50);
+    wait_ms(50);
     if (!mcp23018_status) {
       mcp23018_status = ergodox_left_leds_update();
     }
 #endif
     ergodox_right_led_1_off();
-    _delay_ms(50);
+    wait_ms(50);
     ergodox_right_led_2_off();
-    _delay_ms(50);
+    wait_ms(50);
     ergodox_right_led_3_off();
 #ifdef LEFT_LEDS
-    _delay_ms(50);
+    wait_ms(50);
     ergodox_left_led_1_off();
     if (!mcp23018_status) {
       mcp23018_status = ergodox_left_leds_update();
     }
-    _delay_ms(50);
+    wait_ms(50);
     ergodox_left_led_2_off();
     if (!mcp23018_status) {
       mcp23018_status = ergodox_left_leds_update();
     }
-    _delay_ms(50);
+    wait_ms(50);
     ergodox_left_led_3_off();
     if (!mcp23018_status) {
       mcp23018_status = ergodox_left_leds_update();
@@ -111,7 +110,7 @@ void ergodox_blink_all_leds(void)
 #endif
 
     //ergodox_led_all_on();
-    //_delay_ms(333);
+    //wait_ms(333);
     ergodox_led_all_off();
 }
 
@@ -127,10 +126,10 @@ uint8_t init_mcp23018(void) {
     if (i2c_initialized == 0) {
         i2c_init();  // on pins D(1,0)
         i2c_initialized = true;
-        _delay_ms(1000);
+        wait_ms(1000);
     }
     // i2c_init(); // on pins D(1,0)
-    // _delay_ms(1000);
+    // wait_ms(1000);
 
     // set pin direction
     // - unused  : input  : 1
