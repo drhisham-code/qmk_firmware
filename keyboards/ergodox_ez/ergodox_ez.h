@@ -1,5 +1,4 @@
-#ifndef ERGODOX_EZ_H
-#define ERGODOX_EZ_H
+#pragma once
 
 #include "quantum.h"
 #include <stdint.h>
@@ -271,5 +270,3 @@ extern keyboard_config_t keyboard_config;
     { R05, R15, R25, R35, R45, R55 },     \
     { R06, R16, R26, R36, R46, KC_NO }    \
     }
-
-#endif
