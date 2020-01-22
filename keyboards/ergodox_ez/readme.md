@@ -1,41 +1,52 @@
 # ErgoDox EZ
 
-The Ez uses the [Teensy Loader](https://www.pjrc.com/teensy/loader.html).
+![Ergodox EZ](https://www.ergodox.io/img/ErgoDox-original-min.png)
 
-Linux users need to modify udev rules as described on the [Teensy
-Linux page].  Some distributions provide a binary, maybe called
-`teensy-loader-cli`.
+The ErgoDox keyboard is a DIY keyboard project originally developed by “Dox” (Dominic Beauchamp) inspired by the Key64 Keyboard.
+The printed circuit board was designed by “bpiphany” (Fredrik Atmer).
 
-[Teensy Linux page]: https://www.pjrc.com/teensy/loader_linux.html
+The ErgoDox EZ was commercialized and manufactured by Erez Zukerman, Dmitry Slepov, and Yaara Lancet (ZSA Technology Labs)
 
-To flash the firmware:
+The ErgoDox EZ supports hot swap switches, reinforced by the case (since rev/batch 5), and supports RGB Light (underglow) in the "Shine" model, and RGB Per Key (RGB Matrix) in the "Glow" model. 
 
-  - Build the firmware with `make <keyboardname>:<keymapname>`, for example `make ergodox_ez:default`
+This supports both the original ErgoDox style PCBs, as well as the EZ variant. 
 
-  - This will result in a hex file called `ergodox_ez_keymapname.hex`, e.g.
-    `ergodox_ez_default.hex`
+* Keyboard Maintainer: [Drashna](https://github.com/drashna)
+* Hardware Supported: The PCBs, controllers supported
+* Hardware Availability: [ErgoDox EZ](https://ergodox-ez.com/), [Profet Keyboards](http://shop.profetkeyboards.com/product/ergodox-pcbs), [FalbaTech](https://falba.tech/customize-your-keyboard/customize-your-ergodox/)
 
-  - Start the teensy loader.
+Make example for this keyboard (after setting up your build environment):
 
-  - Load the .hex file into it.
+    make ergodox_ez:default:flash
 
-  - Press the Reset button by inserting a paperclip gently into the reset hole
-    in the top right corner.
+See the [build environment setup](https://docs.qmk.fm/#/getting_started_build_tools) and the [make instructions](https://docs.qmk.fm/#/getting_started_make_guide) for more information. Brand new to QMK? Start with our [Complete Newbs Guide](https://docs.qmk.fm/#/newbs).
 
-  - Click the button in the Teensy app to download the firmware.
 
-See also [video demonstration](https://www.youtube.com/watch?v=9PyiGUO9_KQ) using Teensy in auto mode.
 
-To flash with ´teensy-loader-cli´:
+## ErgoDox EZ Configuration (from Oryx)
 
-  - Build the firmware with `make keymapname`, for example `make default`
+### Indicator LEDs
 
-  - Run ´<path/to/>teensy_loader_cli -mmcu=atmega32u4 -w ergodox_ez_<keymap>.hex´
+The two front "teeth" LED indicators are PWM controlled.   If you have `ORYX_CONFIGURATOR` defined in your keymap's `config.h`, you can use the `LED_LEVEL` keycode to cycle through preset vales (0, 25%, 50%, 75%, 100%), and will be saved to EEPROM (persistent storage)
 
-  - Press the Reset button by inserting a paperclip gently into the reset hole
-    in the top right corder.
+Alternatively, you can set the brightness by calling the following functions: 
 
-## Settings
+```c
+void ergodox_right_led_1_set(uint8_t n);
+void ergodox_right_led_2_set(uint8_t n);
+void ergodox_right_led_3_set(uint8_t n);
 
-You may want to enable QMK_KEYS_PER_SCAN because the Ergodox has a relatively
-slow scan rate.
+void ergodox_led_all_set(uint8_t n);
+```
+
+These settings are not persistent, so you'd need to reset it every time the board starts. 
+
+These are on a 0-255 scale 
+
+### RGB Matrix Features
+
+If you're using the Smart LED (layer indication) feature from the Oryx Configurator, you want to make sure that you enable these options by adding `#define ORYX_CONFIGURATOR` to your keymap's `config.h`. 
+
+This changes the `RGB_TOG` keycode so that it will toggle the lights on and off, in a way that will allow the Smart LEDs to continue to work, even with the rest of the LEDs turned off. 
+
+Additionally, a new keycode has been added to toggle the Smart LEDs.  Use `TOGGLE_LAYER_COLOR`, if you aren't already.  
