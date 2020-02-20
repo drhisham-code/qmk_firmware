@@ -1,31 +1,18 @@
 #include QMK_KEYBOARD_H
 
-extern inline void ergodox_board_led_on(void);
-extern inline void ergodox_right_led_1_on(void);
-extern inline void ergodox_right_led_2_on(void);
-extern inline void ergodox_right_led_3_on(void);
-extern inline void ergodox_right_led_on(uint8_t led);
-
-extern inline void ergodox_board_led_off(void);
-extern inline void ergodox_right_led_1_off(void);
-extern inline void ergodox_right_led_2_off(void);
-extern inline void ergodox_right_led_3_off(void);
-extern inline void ergodox_right_led_off(uint8_t led);
-
-extern inline void ergodox_led_all_on(void);
-extern inline void ergodox_led_all_off(void);
-
-extern inline void ergodox_right_led_1_set(uint8_t n);
-extern inline void ergodox_right_led_2_set(uint8_t n);
-extern inline void ergodox_right_led_3_set(uint8_t n);
-extern inline void ergodox_right_led_set(uint8_t led, uint8_t n);
-
-extern inline void ergodox_led_all_set(uint8_t n);
-
 keyboard_config_t keyboard_config;
 
 bool i2c_initialized = 0;
 i2c_status_t mcp23018_status = 0x20;
+
+void ergodox_init_leds(void) {
+    setPinInputHigh(D6);
+    writePinHigh(D6);
+
+    setPinInputHigh(B5);
+    setPinInputHigh(B6);
+    setPinInputHigh(B7);
+}
 
 void matrix_init_kb(void) {
    // keyboard LEDs (see "PWM on ports OC1(A|B|C)" in "teensy-2-0.md")
@@ -33,17 +20,22 @@ void matrix_init_kb(void) {
     TCCR1B = 0b00001001;  // set and configure fast PWM
 
     // (tied to Vcc for hardware convenience)
-    DDRB  &= ~(1<<4);  // set B(4) as input
-    PORTB &= ~(1<<4);  // set B(4) internal pull-up disabled
+    setPinInput(B4);
+    writePinLow(B4);
 
     // unused pins - C7, D4, D5, D7, E6
     // set as input with internal pull-up enabled
-    DDRC  &= ~(1<<7);
-    DDRD  &= ~(1<<5 | 1<<4);
-    DDRE  &= ~(1<<6);
-    PORTC |=  (1<<7);
-    PORTD |=  (1<<5 | 1<<4);
-    PORTE |=  (1<<6);
+    setPinInput(C7);
+    writePinLow(C7);
+    setPinInput(D4);
+    writePinLow(D4);
+    setPinInput(D5);
+    writePinLow(D5);
+    setPinInput(D5);
+    writePinLow(D5);
+    setPinInput(E6);
+    writePinLow(E6);
+
 
     keyboard_config.raw = eeconfig_read_kb();
     ergodox_led_all_set((uint8_t)keyboard_config.led_level * 255 / 4 );
@@ -55,6 +47,7 @@ void matrix_init_kb(void) {
     }
 #endif
 
+    ergodox_init_leds();
     ergodox_blink_all_leds();
 
     matrix_init_user();
@@ -195,6 +188,84 @@ uint8_t ergodox_left_leds_update(void) {
 }
 #endif
 
+void ergodox_board_led_on(void) { writePinHigh(D6); }
+void ergodox_right_led_1_on(void) { writePinHigh(B5); }
+void ergodox_right_led_2_on(void) { writePinHigh(B6); }
+void ergodox_right_led_3_on(void) { writePinHigh(B7); }
+
+void ergodox_right_led_on(uint8_t led) {
+    if (led == 1) {
+        ergodox_right_led_1_on();
+    } else if (led == 2) {
+        ergodox_right_led_3_on();
+    } else if (led == 3) {
+        ergodox_right_led_3_on();
+    }
+}
+
+void ergodox_board_led_off(void) { writePinLow(D6); }
+void ergodox_right_led_1_off(void) { writePinLow(B5); }
+void ergodox_right_led_2_off(void) { writePinLow(B6); }
+void ergodox_right_led_3_off(void) { writePinLow(B7); }
+
+void ergodox_right_led_off(uint8_t led) {
+    if (led == 1) {
+        ergodox_right_led_1_off();
+    } else if (led == 2) {
+        ergodox_right_led_3_off();
+    } else if (led == 3) {
+        ergodox_right_led_3_off();
+    }
+}
+
+#ifdef LEFT_LEDS
+bool ergodox_left_led_1;
+bool ergodox_left_led_2;
+bool ergodox_left_led_3;
+
+inline void ergodox_left_led_1_on(void)    { ergodox_left_led_1 = 1; }
+inline void ergodox_left_led_2_on(void)    { ergodox_left_led_2 = 1; }
+inline void ergodox_left_led_3_on(void)    { ergodox_left_led_3 = 1; }
+
+inline void ergodox_left_led_1_off(void)    { ergodox_left_led_1 = 0; }
+inline void ergodox_left_led_2_off(void)    { ergodox_left_led_2 = 0; }
+inline void ergodox_left_led_3_off(void)    { ergodox_left_led_3 = 0; }
+#endif // LEFT_LEDS
+
+void ergodox_led_all_on(void) {
+    ergodox_board_led_on();
+    ergodox_right_led_1_on();
+    ergodox_right_led_2_on();
+    ergodox_right_led_3_on();
+#ifdef LEFT_LEDS
+    ergodox_left_led_1_on();
+    ergodox_left_led_2_on();
+    ergodox_left_led_3_on();
+#endif // LEFT_LEDS
+}
+
+void ergodox_led_all_off(void) {
+    ergodox_board_led_off();
+    ergodox_right_led_1_off();
+    ergodox_right_led_2_off();
+    ergodox_right_led_3_off();
+#ifdef LEFT_LEDS
+    ergodox_left_led_1_off();
+    ergodox_left_led_2_off();
+    ergodox_left_led_3_off();
+#endif // LEFT_LEDS
+}
+
+void ergodox_right_led_1_set(uint8_t n) { OCR1A = n; }
+void ergodox_right_led_2_set(uint8_t n) { OCR1B = n; }
+void ergodox_right_led_3_set(uint8_t n) { OCR1C = n; }
+void ergodox_right_led_set(uint8_t led, uint8_t n) { (led == 1) ? (OCR1A = n) : (led == 2) ? (OCR1B = n) : (OCR1C = n); }
+
+void ergodox_led_all_set(uint8_t n) {
+    ergodox_right_led_1_set(n);
+    ergodox_right_led_2_set(n);
+    ergodox_right_led_3_set(n);
+}
 
 #ifdef SWAP_HANDS_ENABLE
 __attribute__ ((weak))
