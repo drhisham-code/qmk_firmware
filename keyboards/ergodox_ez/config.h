@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define VENDOR_ID       0xFEED
 #define PRODUCT_ID      0x1307
 #define DEVICE_VER      0x0001
-#define MANUFACTURER    ErgoDox EZ
+#define MANUFACTURER    ZSA
 #define PRODUCT         ErgoDox EZ
 
 /* key matrix size */
@@ -38,14 +38,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MOUSEKEY_MAX_SPEED 7
 #define MOUSEKEY_WHEEL_DELAY 0
 
-#define DEBOUNCE 30
+#define DEBOUNCE 60
 
 #define TAPPING_TOGGLE 1
 
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST
 
-#define TAPPING_TERM 200
 #define IGNORE_MOD_TAP_INTERRUPT  // this makes it possible to do rolling combos (zx) with keys that convert to other keys on hold (z becomes ctrl when you hold it, and when this option isn't enabled, z rapidly followed by x actually sends Ctrl-x. That's bad.)
 
 /* Mechanical locking support. Use KC_LCAP, KC_LNUM or KC_LSCR instead in keymap */
@@ -88,21 +87,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define RGBLIGHT_SLEEP
 
-/*
- * The debounce filtering reports a key/switch change directly,
- * without any extra delay. After that the debounce logic will filter
- * all further changes, until the key/switch reports the same state for
- * the given count of scans.
- * So a perfect switch will get a short debounce period and
- * a bad key will get a much longer debounce period.
- * The result is an adaptive debouncing period for each switch.
- *
- * If you don't define it here, the matrix code will default to
- * 5, which is now closer to 10ms, but still plenty according to
- * manufacturer specs.
- */
-
-#define USB_MAX_POWER_CONSUMPTION 500
 
 // RGB backlight
 #define DRIVER_ADDR_1 0b1110100
