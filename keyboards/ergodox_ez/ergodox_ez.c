@@ -3,7 +3,8 @@
 keyboard_config_t keyboard_config;
 
 bool i2c_initialized = 0;
-i2c_status_t mcp23018_status = 0x20;
+i2c_status_t mcp23018_initd = 0x20;
+bool mcp23018_leds[3] = {0, 0, 0};
 
 void ergodox_init_leds(void) {
     setPinInputHigh(D6);
@@ -65,18 +66,18 @@ void ergodox_blink_all_leds(void) {
 #ifdef LEFT_LEDS
     ergodox_left_led_1_on();
     wait_ms(50);
-    if (!mcp23018_status) {
-      mcp23018_status = ergodox_left_leds_update();
+    if (!mcp23018_initd) {
+      mcp23018_initd = ergodox_left_leds_update();
     }
     ergodox_left_led_2_on();
     wait_ms(50);
-    if (!mcp23018_status) {
-      mcp23018_status = ergodox_left_leds_update();
+    if (!mcp23018_initd) {
+      mcp23018_initd = ergodox_left_leds_update();
     }
     ergodox_left_led_3_on();
     wait_ms(50);
-    if (!mcp23018_status) {
-      mcp23018_status = ergodox_left_leds_update();
+    if (!mcp23018_initd) {
+      mcp23018_initd = ergodox_left_leds_update();
     }
 #endif
     ergodox_right_led_1_off();
@@ -87,18 +88,18 @@ void ergodox_blink_all_leds(void) {
 #ifdef LEFT_LEDS
     wait_ms(50);
     ergodox_left_led_1_off();
-    if (!mcp23018_status) {
-      mcp23018_status = ergodox_left_leds_update();
+    if (!mcp23018_initd) {
+      mcp23018_initd = ergodox_left_leds_update();
     }
     wait_ms(50);
     ergodox_left_led_2_off();
-    if (!mcp23018_status) {
-      mcp23018_status = ergodox_left_leds_update();
+    if (!mcp23018_initd) {
+      mcp23018_initd = ergodox_left_leds_update();
     }
     wait_ms(50);
     ergodox_left_led_3_off();
-    if (!mcp23018_status) {
-      mcp23018_status = ergodox_left_leds_update();
+    if (!mcp23018_initd) {
+      mcp23018_initd = ergodox_left_leds_update();
     }
 #endif
 
@@ -107,58 +108,11 @@ void ergodox_blink_all_leds(void) {
     ergodox_led_all_off();
 }
 
-uint8_t init_mcp23018(void) {
-    mcp23018_status = 0x20;
-
-    // I2C subsystem
-
-    // uint8_t sreg_prev;
-    // sreg_prev=SREG;
-    // cli();
-
-    if (i2c_initialized == 0) {
-        i2c_init();  // on pins D(1,0)
-        i2c_initialized = true;
-        wait_ms(1000);
-    }
-    // i2c_init(); // on pins D(1,0)
-    // wait_ms(1000);
-
-    // set pin direction
-    // - unused  : input  : 1
-    // - input   : input  : 1
-    // - driving : output : 0
-    mcp23018_status = i2c_start(I2C_ADDR_WRITE, ERGODOX_EZ_I2C_TIMEOUT);    if (mcp23018_status) goto out;
-    mcp23018_status = i2c_write(IODIRA, ERGODOX_EZ_I2C_TIMEOUT);            if (mcp23018_status) goto out;
-    mcp23018_status = i2c_write(0b00000000, ERGODOX_EZ_I2C_TIMEOUT);        if (mcp23018_status) goto out;
-    mcp23018_status = i2c_write(0b00111111, ERGODOX_EZ_I2C_TIMEOUT);        if (mcp23018_status) goto out;
-    i2c_stop();
-
-    // set pull-up
-    // - unused  : on  : 1
-    // - input   : on  : 1
-    // - driving : off : 0
-    mcp23018_status = i2c_start(I2C_ADDR_WRITE, ERGODOX_EZ_I2C_TIMEOUT);    if (mcp23018_status) goto out;
-    mcp23018_status = i2c_write(GPPUA, ERGODOX_EZ_I2C_TIMEOUT);             if (mcp23018_status) goto out;
-    mcp23018_status = i2c_write(0b00000000, ERGODOX_EZ_I2C_TIMEOUT);        if (mcp23018_status) goto out;
-    mcp23018_status = i2c_write(0b00111111, ERGODOX_EZ_I2C_TIMEOUT);        if (mcp23018_status) goto out;
-
-out:
-    i2c_stop();
-
-#ifdef LEFT_LEDS
-    if (!mcp23018_status) mcp23018_status = ergodox_left_leds_update();
-#endif // LEFT_LEDS
-
-    // SREG=sreg_prev;
-
-    return mcp23018_status;
-}
 
 #ifdef LEFT_LEDS
 uint8_t ergodox_left_leds_update(void) {
-    if (mcp23018_status) { // if there was an error
-        return mcp23018_status;
+    if (mcp23018_initd) { // if there was an error
+        return mcp23018_initd;
     }
 #define LEFT_LED_1_SHIFT        7       // in MCP23018 port B
 #define LEFT_LED_2_SHIFT        6       // in MCP23018 port B
@@ -168,23 +122,23 @@ uint8_t ergodox_left_leds_update(void) {
     // - unused  : hi-Z : 1
     // - input   : hi-Z : 1
     // - driving : hi-Z : 1
-    mcp23018_status = i2c_start(I2C_ADDR_WRITE, ERGODOX_EZ_I2C_TIMEOUT);
-    if (mcp23018_status) goto out;
-    mcp23018_status = i2c_write(OLATA, ERGODOX_EZ_I2C_TIMEOUT);
-    if (mcp23018_status) goto out;
-    mcp23018_status = i2c_write(0b11111111
+    mcp23018_initd = i2c_start(I2C_ADDR_WRITE, ERGODOX_EZ_I2C_TIMEOUT);
+    if (mcp23018_initd) goto out;
+    mcp23018_initd = i2c_write(OLATA, ERGODOX_EZ_I2C_TIMEOUT);
+    if (mcp23018_initd) goto out;
+    mcp23018_initd = i2c_write(0b11111111
                                 & ~(ergodox_left_led_3<<LEFT_LED_3_SHIFT),
                                 ERGODOX_EZ_I2C_TIMEOUT);
-    if (mcp23018_status) goto out;
-    mcp23018_status = i2c_write(0b11111111
+    if (mcp23018_initd) goto out;
+    mcp23018_initd = i2c_write(0b11111111
                                 & ~(ergodox_left_led_2<<LEFT_LED_2_SHIFT)
                                 & ~(ergodox_left_led_1<<LEFT_LED_1_SHIFT),
                                 ERGODOX_EZ_I2C_TIMEOUT);
-    if (mcp23018_status) goto out;
+    if (mcp23018_initd) goto out;
 
  out:
     i2c_stop();
-    return mcp23018_status;
+    return mcp23018_initd;
 }
 #endif
 
@@ -223,13 +177,13 @@ bool ergodox_left_led_1;
 bool ergodox_left_led_2;
 bool ergodox_left_led_3;
 
-inline void ergodox_left_led_1_on(void)    { ergodox_left_led_1 = 1; }
-inline void ergodox_left_led_2_on(void)    { ergodox_left_led_2 = 1; }
-inline void ergodox_left_led_3_on(void)    { ergodox_left_led_3 = 1; }
+inline void ergodox_left_led_1_on(void)    { mcp23018_leds[0] = (bool)1; }
+inline void ergodox_left_led_2_on(void)    { mcp23018_leds[0] = (bool) 1; }
+inline void ergodox_left_led_3_on(void)    { mcp23018_leds[0] = (bool)1; }
 
-inline void ergodox_left_led_1_off(void)    { ergodox_left_led_1 = 0; }
-inline void ergodox_left_led_2_off(void)    { ergodox_left_led_2 = 0; }
-inline void ergodox_left_led_3_off(void)    { ergodox_left_led_3 = 0; }
+inline void ergodox_left_led_1_off(void)    { mcp23018_leds[0] = (bool)0; }
+inline void ergodox_left_led_2_off(void)    { mcp23018_leds[1] = (bool)0; }
+inline void ergodox_left_led_3_off(void)    { mcp23018_leds[2] = (bool)0; }
 #endif // LEFT_LEDS
 
 void ergodox_led_all_on(void) {

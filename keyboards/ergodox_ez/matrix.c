@@ -64,16 +64,16 @@ void mcp23018_init(void) {
     i2c_init();
 
 
-    mcp23018_tx[0] = 0x00;        // IODIRA
-    mcp23018_tx[1] = 0b00000000;  // A is output
-    mcp23018_tx[2] = 0b00111111;  // B is inputs
+    mcp23018_tx[0] = 0x01;        // IODIRB
+    mcp23018_tx[1] = 0b00000000;  // B is output
+    mcp23018_tx[2] = 0b00111111;  // A is inputs
 
     if (I2C_STATUS_SUCCESS != i2c_transmit(MCP23018_DEFAULT_ADDRESS << 1, mcp23018_tx, 3, ERGODOX_EZ_I2C_TIMEOUT)) {
         printf("error hori\n");
     } else {
-        mcp23018_tx[0] = 0x0C;        // GPPUA
-        mcp23018_tx[1] = 0b00000000;  // A is not pulled-up
-        mcp23018_tx[2] = 0b00111111;  // B is pulled-up
+        mcp23018_tx[0] = 0x0D;        // GPPUB
+        mcp23018_tx[1] = 0b00000000;  // B is not pulled-up
+        mcp23018_tx[2] = 0b00111111;  // A is pulled-up
 
         if (I2C_STATUS_SUCCESS != i2c_transmit(MCP23018_DEFAULT_ADDRESS << 1, mcp23018_tx, 3, ERGODOX_EZ_I2C_TIMEOUT)) {
             printf("error hori\n");
@@ -188,7 +188,7 @@ uint8_t matrix_scan(void) {
 
         // select row
 
-        mcp23018_tx[0] = 0x12;                                                                   // GPIOA
+        mcp23018_tx[0] = 0x13;                                                                   // GPIOB
         mcp23018_tx[1] = (0b00111111 & ~(1 << (row))) | ((uint8_t)!mcp23018_leds[2] << 7);       // activate row
         mcp23018_tx[2] = ((uint8_t)!mcp23018_leds[1] << 6) | ((uint8_t)!mcp23018_leds[0] << 7);  // activate row
 
@@ -199,7 +199,7 @@ uint8_t matrix_scan(void) {
 
         // read col
 
-        mcp23018_tx[0] = 0x13;  // GPIOB
+        mcp23018_tx[0] = 0x12;  // GPIOA
         if (I2C_STATUS_SUCCESS != i2c_readReg(MCP23018_DEFAULT_ADDRESS << 1, mcp23018_tx[0], &mcp23018_rx[0], 1, ERGODOX_EZ_I2C_TIMEOUT)) {
             printf("error vert\n");
             mcp23018_initd = false;
