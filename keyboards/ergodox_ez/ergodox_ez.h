@@ -11,6 +11,7 @@
 
 // I2C aliases and register addresses (see "mcp23018.md")
 #define I2C_ADDR        0b0100000
+#define MCP23018_DEFAULT_ADDRESS        I2C_ADDR
 #define I2C_ADDR_WRITE  ( (I2C_ADDR<<1) | I2C_WRITE )
 #define I2C_ADDR_READ   ( (I2C_ADDR<<1) | I2C_READ  )
 #define IODIRA          0x00            // i/o direction register
