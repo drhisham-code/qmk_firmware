@@ -162,7 +162,7 @@ uint8_t matrix_scan(void) {
         }
     }
 
-    for (uint8_t row = 0; row <= ROWS_PER_HAND; row++) {
+    for (uint8_t row = 0; row < ROWS_PER_HAND; row++) {
         // right side
 
         if (!mcp23018_initd) {
