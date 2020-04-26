@@ -92,6 +92,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef DIP_SWITCH_ENABLE
 #    include "dip_switch.h"
 #endif
+#ifdef SPLIT_KEYBOARD
+#    include "split_util.h"
+#endif
 
 // Only enable this if console is enabled to print to
 #if defined(DEBUG_MATRIX_SCAN_RATE) && defined(CONSOLE_ENABLE)
@@ -421,9 +424,16 @@ MATRIX_LOOP_END:
 #endif
 
     // update LED
-    if (led_status != host_keyboard_leds()) {
-        led_status = host_keyboard_leds();
-        keyboard_set_leds(led_status);
+    if (is_keyboard_master()) {
+        if (led_status != host_keyboard_leds()) {
+            led_status = host_keyboard_leds();
+            keyboard_set_leds(led_status);
+        }
+    } else {
+        if (led_status != get_slave_host_leds()) {
+            led_status = get_slave_host_leds();
+            keyboard_set_leds(led_status);
+        }
     }
 }
 
