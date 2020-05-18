@@ -281,6 +281,12 @@ void shutdown_user(void);
 void register_code16(uint16_t code);
 void unregister_code16(uint16_t code);
 void tap_code16(uint16_t code);
+void register_magic_code(uint8_t code);
+void register_magic_code16(uint16_t keycode);
+void unregister_magic_code(uint8_t code);
+void unregister_magic_code16(uint16_t keycode);
+void tap_magic_code(uint8_t keycode);
+void tap_magic_code16(uint16_t keycode);
 
 void     send_dword(uint32_t number);
 void     send_word(uint16_t number);
