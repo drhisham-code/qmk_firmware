@@ -120,46 +120,48 @@ uint16_t keycode_config(uint16_t keycode) {
  */
 
 uint8_t mod_config(uint8_t mod) {
+    uint8_t temp_mod = mod;
+
     if (keymap_config.swap_lalt_lgui) {
         if ((mod & MOD_RGUI) == MOD_LGUI) {
-            mod &= ~MOD_LGUI;
-            mod |= MOD_LALT;
+            temp_mod &= ~MOD_LGUI;
+            temp_mod |= MOD_LALT;
         } else if ((mod & MOD_RALT) == MOD_LALT) {
-            mod &= ~MOD_LALT;
-            mod |= MOD_LGUI;
+            temp_mod &= ~MOD_LALT;
+            temp_mod |= MOD_LGUI;
         }
     }
     if (keymap_config.swap_ralt_rgui) {
         if ((mod & MOD_RGUI) == MOD_RGUI) {
-            mod &= ~MOD_RGUI;
-            mod |= MOD_RALT;
+            temp_mod &= ~MOD_RGUI;
+            temp_mod |= MOD_RALT;
         } else if ((mod & MOD_RALT) == MOD_RALT) {
-            mod &= ~MOD_RALT;
-            mod |= MOD_RGUI;
+            temp_mod &= ~MOD_RALT;
+            temp_mod |= MOD_RGUI;
         }
     }
     if (keymap_config.swap_lctl_lgui) {
         if ((mod & MOD_RGUI) == MOD_LGUI) {
-            mod &= ~MOD_LGUI;
-            mod |= MOD_LCTL;
+            temp_mod &= ~MOD_LGUI;
+            temp_mod |= MOD_LCTL;
         } else if ((mod & MOD_RCTL) == MOD_LCTL) {
-            mod &= ~MOD_LCTL;
-            mod |= MOD_LGUI;
+            temp_mod &= ~MOD_LCTL;
+            temp_mod |= MOD_LGUI;
         }
     }
     if (keymap_config.swap_rctl_rgui) {
         if ((mod & MOD_RGUI) == MOD_RGUI) {
-            mod &= ~MOD_RGUI;
-            mod |= MOD_RCTL;
+            temp_mod &= ~MOD_RGUI;
+            temp_mod |= MOD_RCTL;
         } else if ((mod & MOD_RCTL) == MOD_RCTL) {
-            mod &= ~MOD_RCTL;
-            mod |= MOD_RGUI;
+            temp_mod &= ~MOD_RCTL;
+            temp_mod |= MOD_RGUI;
         }
     }
     if (keymap_config.no_gui) {
-        mod &= ~MOD_LGUI;
-        mod &= ~MOD_RGUI;
+        temp_mod &= ~MOD_LGUI;
+        temp_mod &= ~MOD_RGUI;
     }
 
-    return mod;
+    return temp_mod;
 }
