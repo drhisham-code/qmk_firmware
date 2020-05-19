@@ -24,10 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include "transport.h"
 
-#ifdef ENCODER_ENABLE
-#    include "encoder.h"
-#endif
-
 #define ERROR_DISCONNECT_COUNT 5
 
 #define ROWS_PER_HAND (MATRIX_ROWS / 2)
@@ -267,9 +263,6 @@ void matrix_post_scan(void) {
 #ifdef SPLIT_TRANSPORT_MIRROR
         matrix_scan_quantum();
 #else
-#    ifdef ENCODER_ENABLE
-        encoder_read();
-#    endif
         matrix_slave_scan_user();
 #endif
     }
