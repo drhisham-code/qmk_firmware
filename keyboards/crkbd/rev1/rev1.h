@@ -13,13 +13,8 @@
     #include "ssd1306.h"
 #endif
 
-#ifdef USE_I2C
-    #include <stddef.h>
-    #ifdef __AVR__
-        #include <avr/interrupt.h>
-        #include <avr/io.h>
-    #endif
-#endif
+#define has_usb() is_keyboard_master()
+#define is_master is_keyboard_master()
 
 // clang-format off
 #define LAYOUT_split_3x6_3( \
