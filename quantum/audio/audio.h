@@ -253,9 +253,6 @@ float audio_get_frequency(uint8_t tone_index);
 // These macros are used to allow play_notes to play an array of indeterminate
 // length. This works around the limitation of C's sizeof operation on pointers.
 // The global float array for the song must be used here.
-#define NOTE_ARRAY_SIZE(x) ((int16_t)(sizeof(x) / (sizeof(x[0]))))
-#define PLAY_SONG(note_array) play_notes(&note_array, NOTE_ARRAY_SIZE((note_array)), false)
-#define PLAY_LOOP(note_array) play_notes(&note_array, NOTE_ARRAY_SIZE((note_array)), true)
 
 /**
  * @brief calculate and return the frequency for the requested tone
