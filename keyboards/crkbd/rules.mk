@@ -29,7 +29,7 @@ BLUETOOTH_ENABLE = no       # Enable Bluetooth with the Adafruit EZ-Key HID
 RGBLIGHT_ENABLE = no        # Enable WS2812 RGB underlight.
 
 SPLIT_KEYBOARD = yes
-SPLIT_TRANSPORT = mirror    # for when Split Mirroring drops, it will maintain mirroring functionality
+#SPLIT_TRANSPORT = mirror    # for when Split Mirroring drops, it will maintain mirroring functionality
 LIB_SRC += ssd1306.c
 
 # if firmware size over limit, try this option

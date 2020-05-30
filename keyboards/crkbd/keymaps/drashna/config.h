@@ -64,7 +64,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifdef HAPTIC_ENABLE
-#    define SOLENOID_PIN B7
+#    define SOLENOID_PIN B5
 #endif
 
 #undef PRODUCT
@@ -76,3 +76,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define OLED_DISABLE_TIMEOUT
 #define TAPPING_TERM_PER_KEY
+#define STM32_DMA_REQUIRED TRUE

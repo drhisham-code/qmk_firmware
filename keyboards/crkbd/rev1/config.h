@@ -53,10 +53,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define LOCKING_RESYNC_ENABLE
 
 #define USE_SERIAL
-#define SOFT_SERIAL_PIN D2
+#ifdef CONVERT_TO_PROTON_C
+#    define SOFT_SERIAL_PIN D3
+#else
+#    define SOFT_SERIAL_PIN D2
+#endif
 
 /* ws2812 RGB LED */
-#define RGB_DI_PIN D3
+#ifdef CONVERT_TO_PROTON_C
+#    define RGB_DI_PIN D2
+#define WS2812_PWM_DRIVER PWMD1
+#define WS2812_PWM_CHANNEL 2
+#define WS2812_DMA_STREAM STM32_DMA1_STREAM1
+#define WS2812_DMA_CHANNEL 2
+#else
+#    define RGB_DI_PIN D3
+#endif
 
 #ifdef RGBLIGHT_ENABLE
 #    define RGBLED_NUM 54  // Number of LEDs

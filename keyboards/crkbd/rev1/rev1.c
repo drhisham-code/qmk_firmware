@@ -76,7 +76,7 @@ void matrix_init_user(void) {}
 void matrix_init_kb(void) {
 
 #if defined(RGB_MATRIX_ENABLE) && !defined(SPLIT_TRANSPORT_MIRROR)
-    if (!isLeftHand) {
+    if (!is_keyboard_left()) {
         g_led_config = (led_config_t){ {
             {  51,  50,  45,  44,  37,  36 },
             {  52,  49,  46,  43,  38,  35 },
