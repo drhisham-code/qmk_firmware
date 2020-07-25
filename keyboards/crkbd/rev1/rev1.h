@@ -14,7 +14,7 @@
 #endif
 
 #define has_usb() is_keyboard_master()
-uint8_t is_master;
+extern uint8_t is_master;
 
 // clang-format off
 #define LAYOUT( \

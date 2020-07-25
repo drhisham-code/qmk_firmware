@@ -1,5 +1,7 @@
 #include "crkbd.h"
 
+uint8_t is_master;
+
 #ifdef RGB_MATRIX_ENABLE
 
 // clang-format off
