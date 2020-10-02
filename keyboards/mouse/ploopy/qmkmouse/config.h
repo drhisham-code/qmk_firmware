@@ -97,7 +97,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 /* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
-#define DEBOUNCE 2
+#define DEBOUNCE 4
 
 /* define if matrix has ghost (lacks anti-ghosting diodes) */
 //#define MATRIX_HAS_GHOST
